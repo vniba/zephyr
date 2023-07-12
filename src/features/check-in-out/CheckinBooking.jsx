@@ -7,7 +7,7 @@ import ButtonGroup from "src/ui/ButtonGroup.jsx";
 import Button from "src/ui/Button.jsx";
 import ButtonText from "src/ui/ButtonText.jsx";
 
-import { useMoveBack } from "src/hooks/useMoveBack.js";
+import { useMoveBack } from "src/hooks/useMoveBack.ts";
 
 const Box = styled.div`
   /* Box */

@@ -4,8 +4,8 @@ import { format, isToday } from "date-fns";
 import Tag from "src/ui/Tag.jsx";
 import Table from "src/ui/Table.jsx";
 
-import { formatCurrency } from "src/utils/helpers.js";
-import { formatDistanceFromNow } from "src/utils/helpers.js";
+import { formatCurrency } from "src/utils/helpers.ts";
+import { formatDistanceFromNow } from "src/utils/helpers.ts";
 
 const Cabin = styled.div`
   font-size: 1.6rem;
