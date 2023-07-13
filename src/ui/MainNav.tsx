@@ -88,7 +88,7 @@ function MainNav() {
     <nav>
       <NavList>
         {navItems.map(item => (
-          <li>
+          <li key={item.label}>
             <StyledNavLink to={item.to}>
               {item.icon}
               <span>{item.label}</span>
