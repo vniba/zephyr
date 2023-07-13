@@ -9,6 +9,15 @@ import Users from './pages/Users.tsx';
 import PageNotFound from './pages/PageNotFound.tsx';
 import Account from './pages/Account.tsx';
 import AppLayout from './ui/AppLayout.tsx';
+import {
+  ACCOUNT,
+  BOOKINGS,
+  CABINS,
+  DASHBOARD,
+  LOGIN,
+  SETTINGS,
+  USERS,
+} from './utils/constants.ts';
 
 function App() {
   return (
@@ -17,15 +26,15 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route element={<AppLayout />}>
-            <Route index element={<Navigate replace to='dashboard' />} />
-            <Route path='dashboard' element={<Dashboard />} />
-            <Route path='bookings' element={<Bookings />} />
-            <Route path='cabins' element={<Cabins />} />
-            <Route path='account' element={<Account />} />
-            <Route path='settings' element={<Settings />} />
-            <Route path='users' element={<Users />} />
+            <Route index element={<Navigate replace to={DASHBOARD} />} />
+            <Route path={DASHBOARD} element={<Dashboard />} />
+            <Route path={BOOKINGS} element={<Bookings />} />
+            <Route path={CABINS} element={<Cabins />} />
+            <Route path={ACCOUNT} element={<Account />} />
+            <Route path={SETTINGS} element={<Settings />} />
+            <Route path={USERS} element={<Users />} />
           </Route>
-          <Route path='login' element={<Login />} />
+          <Route path={LOGIN} element={<Login />} />
           <Route path='*' element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
