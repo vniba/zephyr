@@ -30,6 +30,7 @@ describe('Button component', function () {
     expect(button).toHaveStyleRule('color: var(--color-red-100)');
     expect(button).toHaveStyleRule('border: none;');
   });
+
   it('should matches default button snapshot', function () {
     const { container } = render(<Button>test</Button>);
     expect(container.firstChild).toMatchSnapshot();
