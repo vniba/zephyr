@@ -4,7 +4,7 @@ import BookingDataBox from "src/features/bookings/BookingDataBox.jsx";
 import Row from "../../ui/Row";
 import Heading from "../../ui/Heading";
 import ButtonGroup from "src/ui/ButtonGroup.jsx";
-import Button from "src/ui/Button.jsx";
+import Button from "src/ui/Button.tsx";
 import ButtonText from "src/ui/ButtonText.jsx";
 
 import { useMoveBack } from "src/hooks/useMoveBack.ts";

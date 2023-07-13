@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { isFuture, isPast, isToday } from "date-fns";
 import supabase from "../services/supabase";
-import Button from "src/ui/Button.jsx";
+import Button from "src/ui/Button.tsx";
 import { subtractDates } from "src/utils/helpers.ts";
 
 import { bookings } from "src/data/data-bookings.ts";

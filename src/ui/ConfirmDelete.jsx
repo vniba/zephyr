@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import Button from "src/ui/Button.jsx";
+import Button from "src/ui/Button.tsx";
 import Heading from "./Heading";
 
 const StyledConfirmDelete = styled.div`

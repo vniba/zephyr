@@ -5,7 +5,7 @@ import Row from "../../ui/Row";
 import Heading from "../../ui/Heading";
 import Tag from "src/ui/Tag.jsx";
 import ButtonGroup from "src/ui/ButtonGroup.jsx";
-import Button from "src/ui/Button.jsx";
+import Button from "src/ui/Button.tsx";
 import ButtonText from "src/ui/ButtonText.jsx";
 
 import { useMoveBack } from "src/hooks/useMoveBack.ts";
