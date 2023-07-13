@@ -1,18 +1,19 @@
-import { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
   :root {
     /* Indigo */
-    --color-brand-50: #f3f0ff;
-    --color-brand-100: #e5dbff;
-    --color-brand-200: #d0bfff;
-    --color-brand-300: #b197fc;
-    --color-brand-400: #9775fa;
-    --color-brand-500: #845ef7;
-    --color-brand-600: #7950f2;
-    --color-brand-700: #7048e8;
-    --color-brand-800: #6741d9;
-    --color-brand-900: #5f3dc4;
+    --color-brand-50: #faf5ff;
+    --color-brand-100: #f3e8ff;
+    --color-brand-200: #e9d5ff;
+    --color-brand-300: #d8b4fe;
+    --color-brand-400: #c084fc;
+    --color-brand-500: #a855f7;
+    --color-brand-600: #9333ea;
+    --color-brand-700: #7e22ce;
+    --color-brand-800: #6b21a8;
+    --color-brand-900: #581c87;
+    --color-brand-950: #3b0764;
 
     /* Grey */
     --color-grey-0: #fff;
