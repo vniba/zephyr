@@ -53,7 +53,7 @@ interface ButtonProps {
   size?: 'small' | 'medium' | 'large';
 }
 
-export const Button = styled.button<ButtonProps>`
+const Button = styled.button<ButtonProps>`
   border: none;
   box-shadow: var(--shadow-sm);
   border-radius: var(--border-radius-md);
@@ -63,3 +63,4 @@ export const Button = styled.button<ButtonProps>`
 `;
 
 Button.defaultProps = { variation: 'primary', size: 'medium' };
+export default Button;

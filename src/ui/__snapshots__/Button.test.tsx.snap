@@ -1,0 +1,25 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Button component > should matches default button snapshot 1`] = `
+.c0 {
+  border: none;
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--border-radius-md);
+  font-size: 1.4rem;
+  padding: 1.2rem 1.6rem;
+  font-weight: 500;
+  color: var(--color-brand-50);
+  background-color: var(--color-brand-600);
+}
+
+.c0:hover {
+  background-color: var(--color-brand-700);
+}
+
+<button
+  class="c0"
+  variation="primary"
+>
+  test
+</button>
+`;
