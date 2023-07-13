@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 import Button from "src/ui/Button.tsx";
-import FileInput from "src/ui/FileInput.jsx";
-import Form from "src/ui/Form.jsx";
+import FileInput from "src/ui/FileInput.tsx";
+import Form from "src/ui/Form.tsx";
 import FormRow from "../../ui/FormRow";
 import Input from "../../ui/Input";
 

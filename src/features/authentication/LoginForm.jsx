@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Button from "src/ui/Button.tsx";
-import Form from "src/ui/Form.jsx";
+import Form from "src/ui/Form.tsx";
 import Input from "../../ui/Input";
 import FormRowVertical from "../../ui/FormRowVertical";
 
