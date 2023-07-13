@@ -1,4 +1,8 @@
-import styled from "styled-components";
+import styled from 'styled-components';
+import { NavLink } from 'react-router-dom';
+import { HiHome, HiMiniHomeModern, HiUsers } from 'react-icons/hi2';
+import { FaCalendarAlt } from 'react-icons/fa';
+import { MdSettings } from 'react-icons/md';
 
 const NavList = styled.ul`
   display: flex;
@@ -6,7 +10,7 @@ const NavList = styled.ul`
   gap: 0.8rem;
 `;
 
-const Link = styled.a`
+const StyledNavLink = styled(NavLink)`
   &:link,
   &:visited {
     display: flex;
@@ -25,7 +29,7 @@ const Link = styled.a`
   &:active,
   &.active:link,
   &.active:visited {
-    color: var(--color-grey-800);
+    color: var(--color-grey-700);
     background-color: var(--color-grey-50);
     border-radius: var(--border-radius-sm);
   }
@@ -41,6 +45,47 @@ const Link = styled.a`
   &:active svg,
   &.active:link svg,
   &.active:visited svg {
-    color: var(--color-brand-600);
+    color: var(--color-brand-900);
   }
 `;
+
+function MainNav() {
+  return (
+    <nav>
+      <NavList>
+        <li>
+          <StyledNavLink to='/dashboard'>
+            <HiHome />
+            <span>Home</span>
+          </StyledNavLink>
+        </li>
+        <li>
+          <StyledNavLink to='/bookings'>
+            <FaCalendarAlt />
+            <span>Bookings</span>
+          </StyledNavLink>
+        </li>{' '}
+        <li>
+          <StyledNavLink to='/cabins'>
+            <HiMiniHomeModern />
+            <span>Cabins</span>
+          </StyledNavLink>
+        </li>{' '}
+        <li>
+          <StyledNavLink to='/users'>
+            <HiUsers />
+            <span>Users</span>
+          </StyledNavLink>
+        </li>
+        <li>
+          <StyledNavLink to='/settings'>
+            <MdSettings />
+            <span>settings</span>
+          </StyledNavLink>
+        </li>
+      </NavList>
+    </nav>
+  );
+}
+
+export default MainNav;
