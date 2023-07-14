@@ -11,7 +11,7 @@ export interface Cabin {
   image: string;
 }
 
-export async function cabinAPI(supabase: SupabaseClient): Promise<Cabin[]> {
+export async function cabinAPIGet(supabase: SupabaseClient): Promise<Cabin[]> {
   const { data, error }: PostgrestSingleResponse<Cabin[]> = await supabase
     .from('cabins')
     .select('*');
@@ -20,5 +20,16 @@ export async function cabinAPI(supabase: SupabaseClient): Promise<Cabin[]> {
     console.error(error);
     throw new Error(error.message);
   }
+  return data;
+}
+export async function cabinAPIDelete(
+  supabase: SupabaseClient,
+  id: number,
+): Promise<Cabin[] | null> {
+  const { data, error } = await supabase.from('cabins').delete().eq('id', id);
+  if (error) {
+    throw new Error(error.message);
+  }
+
   return data;
 }
