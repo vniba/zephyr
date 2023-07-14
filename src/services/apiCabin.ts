@@ -1,6 +1,6 @@
 import { PostgrestSingleResponse, SupabaseClient } from '@supabase/supabase-js';
 
-interface Cabin {
+export interface Cabin {
   id: number;
   created_at: string;
   name: string;
@@ -8,10 +8,10 @@ interface Cabin {
   regularPrice: number;
   discount: number;
   description: string;
-  image: string | null;
+  image: string;
 }
 
-export async function getCabins(supabase: SupabaseClient): Promise<Cabin[]> {
+export async function cabinAPI(supabase: SupabaseClient): Promise<Cabin[]> {
   const { data, error }: PostgrestSingleResponse<Cabin[]> = await supabase
     .from('cabins')
     .select('*');
