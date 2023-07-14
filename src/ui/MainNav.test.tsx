@@ -1,25 +1,17 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import MainNav from './MainNav.tsx';
 import { expect, it } from 'vitest';
-import { BrowserRouter } from 'react-router-dom';
 import { navItems } from './NavItems.tsx';
+import { TestRouter } from '../test/testRouter.tsx';
 
 describe('MainNav component', function () {
   it('should render  li tag with length of navItems ', function () {
-    render(
-      <BrowserRouter>
-        <MainNav />
-      </BrowserRouter>,
-    );
+    TestRouter(<MainNav />);
     const list = screen.getAllByRole('listitem');
     expect(list).toHaveLength(navItems.length);
   });
   it('should render href with correct path', function () {
-    render(
-      <BrowserRouter>
-        <MainNav />
-      </BrowserRouter>,
-    );
+    TestRouter(<MainNav />);
 
     navItems.forEach(item => {
       const linkEl = screen.getByRole('link', { name: item.label });
@@ -28,21 +20,13 @@ describe('MainNav component', function () {
   });
 
   it('should render icons with length of navItem', function () {
-    const { container } = render(
-      <BrowserRouter>
-        <MainNav />
-      </BrowserRouter>,
-    );
+    const { container } = TestRouter(<MainNav />);
     const svg = container.querySelectorAll('svg');
     expect(svg).toHaveLength(navItems.length);
   });
 
   it('should match default snapshot', function () {
-    const { container } = render(
-      <BrowserRouter>
-        <MainNav />
-      </BrowserRouter>,
-    );
+    const { container } = TestRouter(<MainNav />);
     expect(container.firstChild).toMatchSnapshot();
   });
 });
