@@ -20,6 +20,7 @@ import {
   USERS,
 } from './utils/constants.ts';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import Toast from './ui/Toast.tsx';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -48,6 +49,7 @@ function App() {
           <Route path='*' element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
+      <Toast />
     </QueryClientProvider>
   );
 }
