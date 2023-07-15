@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import toast from 'react-hot-toast';
 
 import Input from '../../ui/Input';
 import Form from '../../ui/Form.tsx';
@@ -6,6 +7,9 @@ import Button from '../../ui/Button.tsx';
 import FileInput from '../../ui/FileInput.tsx';
 import Textarea from '../../ui/Textarea.tsx';
 import { useForm } from 'react-hook-form';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createCabin } from '../../utils/cabinFn.ts';
+import { CABIN_Q_KEY } from '../../utils/constants.ts';
 
 const FormRow = styled.div`
   display: grid;
@@ -43,7 +47,7 @@ const Error = styled.span`
   color: var(--color-red-700);
 `;
 
-interface ICabin {
+export interface NewCabin {
   name: string;
   maxCapacity: string;
   regularPrice: string;
@@ -53,8 +57,20 @@ interface ICabin {
 }
 
 function CreateCabinForm() {
-  const { register, handleSubmit } = useForm<ICabin>();
-  const handleAdd = data => console.log(data);
+  const queryClient = useQueryClient();
+  const { register, handleSubmit, reset } = useForm<NewCabin>();
+  const { isLoading, mutate } = useMutation({
+    mutationFn: createCabin,
+    onSuccess: async () => {
+      toast.success('cabin successfully created');
+      await queryClient.invalidateQueries({ queryKey: [CABIN_Q_KEY] });
+      reset();
+    },
+    onError: error => toast.error((error as Error).message),
+  });
+  const handleAdd = (data: NewCabin) => {
+    mutate(data);
+  };
   return (
     <Form type='modal' onSubmit={handleSubmit(handleAdd)}>
       <FormRow>
@@ -117,7 +133,7 @@ function CreateCabinForm() {
         <Button variation='secondary' type='reset'>
           Cancel
         </Button>
-        <Button>Edit cabin</Button>
+        <Button disabled={isLoading}>Edit cabin</Button>
       </FormRow>
     </Form>
   );
