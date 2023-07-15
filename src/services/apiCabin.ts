@@ -28,14 +28,27 @@ export async function cabinAPICreate(
   supabase: SupabaseClient,
   cabin: NewCabin,
 ) {
+  const imageName = `${Math.random()}-${cabin.image.name.replaceAll('/', '-')}`;
+  const path = import.meta.env.VITE_SUPABASE_URL as string;
+  const imagePath = `${path}/storage/v1/object/public/cabins-images/${imageName}`;
+
+  // inserting data
   const { data, error }: PostgrestSingleResponse<Cabin[]> = await supabase
     .from('cabins')
-    .insert(cabin)
+    .insert({ ...cabin, image: imagePath })
     .select();
-
+  console.log(data, 'data');
   if (error) {
-    console.error(error);
     throw new Error('cabin could not be created');
+  }
+
+  // uploading image
+  const { error: imageError } = await supabase.storage
+    .from('cabins-images')
+    .upload(imageName, cabin.image);
+  if (imageError) {
+    await supabase.from('cabins').delete().eq('id', data[0].id);
+    throw new Error('error when uploading image or file is too large');
   }
   return data;
 }

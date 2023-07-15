@@ -16,9 +16,12 @@ export interface NewCabin {
   regularPrice: string;
   discount: string;
   description: string;
-  image: string;
+  image: File;
 }
 
+interface INewCabinForm extends NewCabin {
+  image: FileList;
+}
 function CreateCabinForm() {
   const queryClient = useQueryClient();
   const {
@@ -36,8 +39,9 @@ function CreateCabinForm() {
     },
     onError: error => toast.error((error as Error).message),
   });
-  const handleAdd = (data: NewCabin) => {
-    mutate(data);
+  const handleAdd = (data: INewCabinForm) => {
+    console.log(data);
+    mutate({ ...data, image: data.image[0] });
   };
 
   return (
