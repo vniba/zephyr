@@ -1,10 +1,11 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-import Input from "../../ui/Input";
-import Form from "src/ui/Form.tsx";
-import Button from "src/ui/Button.tsx";
-import FileInput from "src/ui/FileInput.tsx";
-import Textarea from "src/ui/Textarea.tsx";
+import Input from '../../ui/Input';
+import Form from '../../ui/Form.tsx';
+import Button from '../../ui/Button.tsx';
+import FileInput from '../../ui/FileInput.tsx';
+import Textarea from '../../ui/Textarea.tsx';
+import { useForm } from 'react-hook-form';
 
 const FormRow = styled.div`
   display: grid;
@@ -42,41 +43,77 @@ const Error = styled.span`
   color: var(--color-red-700);
 `;
 
+interface ICabin {
+  name: string;
+  maxCapacity: string;
+  regularPrice: string;
+  discount: string;
+  description: string;
+  image: string;
+}
+
 function CreateCabinForm() {
+  const { register, handleSubmit } = useForm<ICabin>();
+  const handleAdd = data => console.log(data);
   return (
-    <Form>
+    <Form type='modal' onSubmit={handleSubmit(handleAdd)}>
       <FormRow>
         <Label htmlFor='name'>Cabin name</Label>
-        <Input type='text' id='name' />
+        <Input required type='text' id='name' {...register('name')} />
       </FormRow>
 
       <FormRow>
         <Label htmlFor='maxCapacity'>Maximum capacity</Label>
-        <Input type='number' id='maxCapacity' />
+        <Input
+          required
+          type='number'
+          id='maxCapacity'
+          {...register('maxCapacity')}
+        />
       </FormRow>
 
       <FormRow>
         <Label htmlFor='regularPrice'>Regular price</Label>
-        <Input type='number' id='regularPrice' />
+        <Input
+          required
+          type='number'
+          id='regularPrice'
+          {...register('regularPrice')}
+        />
       </FormRow>
 
       <FormRow>
         <Label htmlFor='discount'>Discount</Label>
-        <Input type='number' id='discount' defaultValue={0} />
+        <Input
+          required
+          type='number'
+          id='discount'
+          defaultValue={0}
+          {...register('discount')}
+        />
       </FormRow>
 
       <FormRow>
         <Label htmlFor='description'>Description for website</Label>
-        <Textarea type='number' id='description' defaultValue='' />
+        <Textarea
+          required
+          id='description'
+          defaultValue=''
+          {...register('description')}
+        />
       </FormRow>
 
       <FormRow>
         <Label htmlFor='image'>Cabin photo</Label>
-        <FileInput id='image' accept='image/*' />
+        <FileInput
+          required
+          id='image'
+          accept='image/*'
+          {...register('image')}
+        />
       </FormRow>
 
       <FormRow>
-        {/* type is an HTML attribute! */}
         <Button variation='secondary' type='reset'>
           Cancel
         </Button>

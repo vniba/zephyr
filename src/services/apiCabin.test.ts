@@ -1,5 +1,5 @@
 import { expect, vi } from 'vitest';
-import { getCabins } from './apiCabin.ts';
+import { cabinAPIGet } from './apiCabin.ts';
 import { SupabaseClient } from '@supabase/supabase-js';
 
 const cab = [
@@ -25,7 +25,7 @@ describe('apiCabin module', function () {
         select: vi.fn().mockResolvedValue({ data: cab, error: null }),
       }),
     };
-    const cabins = await getCabins(mockSupbaseClent);
+    const cabins = await cabinAPIGet(mockSupbaseClent);
     expect(cabins).toBeTypeOf('object');
     expect(cabins.some(cabin => cabin.name === '001')).toBeTruthy();
   });

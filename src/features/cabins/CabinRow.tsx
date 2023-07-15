@@ -21,10 +21,11 @@ const TableRow = styled.div`
 
 const Img = styled.img`
   display: block;
-  max-width: 7rem;
+  width: clamp(10rem, 13rem, 15rem);
   aspect-ratio: 3 / 2;
   object-fit: cover;
   object-position: center;
+  margin: 1rem 0;
   transform: scale(1.5) translateX(-7px);
 `;
 
