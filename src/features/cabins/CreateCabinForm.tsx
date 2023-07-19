@@ -9,6 +9,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createCabin } from '../../utils/cabinFn.ts';
 import { CABIN_Q_KEY } from '../../utils/constants.ts';
 import FormRow from '../../ui/FormRow.tsx';
+import { Cabin } from '../../services/apiCabin.ts';
+import { Cabins } from '../../../types/supabase.ts';
 
 export interface NewCabin {
   name: string;
@@ -16,22 +18,46 @@ export interface NewCabin {
   regularPrice: string;
   discount: string;
   description: string;
-  image: File;
+  image: FileList | string;
 }
 
-interface INewCabinForm extends NewCabin {
-  image: FileList;
+interface CreateCabinFormProps {
+  cabinToEdit: Cabins;
 }
-function CreateCabinForm() {
+const defaultCabin: Cabin = {
+  id: 0,
+  discount: '',
+  regularPrice: '',
+  maxCapacity: '',
+  name: '',
+  image: '',
+  description: '',
+};
+function CreateCabinForm({ cabinToEdit = defaultCabin }: CreateCabinFormProps) {
+  const { id: editId, ...editValues } = cabinToEdit;
+  const isEditSession = !!editId;
+  console.log(editValues);
   const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<NewCabin>();
-  const { isLoading, mutate } = useMutation({
+  } = useForm<NewCabin>({
+    defaultValues: isEditSession ? editValues : defaultCabin,
+  });
+  const { isLoading, mutate: createCabins } = useMutation({
     mutationFn: createCabin,
+    onSuccess: async () => {
+      toast.success('cabin successfully created');
+      await queryClient.invalidateQueries({ queryKey: [CABIN_Q_KEY] });
+    },
+    onError: error => toast.error((error as Error).message),
+  });
+
+  const { isLoading: isEditing, mutate: updateCabin } = useMutation({
+    mutationFn: ({ cabin, id }: { cabin: NewCabin; id: number }) =>
+      createCabin(cabin, id),
     onSuccess: async () => {
       toast.success('cabin successfully created');
       await queryClient.invalidateQueries({ queryKey: [CABIN_Q_KEY] });
@@ -39,16 +65,18 @@ function CreateCabinForm() {
     },
     onError: error => toast.error((error as Error).message),
   });
-  const handleAdd = (data: INewCabinForm) => {
-    console.log(data);
-    mutate({ ...data, image: data.image[0] });
+  const isWorking = isEditing || isLoading;
+  const handleAdd = (data: NewCabin) => {
+    if (isEditSession) updateCabin({ cabin: { ...data }, id: editId });
+    else createCabins({ ...data });
+    console.log(data, 'handle add');
   };
 
   return (
     <Form type='modal' onSubmit={handleSubmit(handleAdd)}>
       <FormRow label='Cabin Name' error={errors?.name?.message}>
         <Input
-          disabled={isLoading}
+          disabled={isWorking}
           type='text'
           id='name'
           {...register('name', {
@@ -63,7 +91,7 @@ function CreateCabinForm() {
 
       <FormRow label='Maximum Capacity' error={errors?.maxCapacity?.message}>
         <Input
-          disabled={isLoading}
+          disabled={isWorking}
           type='number'
           id='maxCapacity'
           {...register('maxCapacity', {
@@ -77,7 +105,7 @@ function CreateCabinForm() {
       <FormRow label='Regular price' error={errors?.regularPrice?.message}>
         <Input
           type='number'
-          disabled={isLoading}
+          disabled={isWorking}
           id='regularPrice'
           {...register('regularPrice', {
             required: 'price is required',
@@ -90,7 +118,7 @@ function CreateCabinForm() {
         <Input
           type='number'
           id='discount'
-          disabled={isLoading}
+          disabled={isWorking}
           defaultValue={0}
           {...register('discount', {
             required: 'discount required',
@@ -107,14 +135,14 @@ function CreateCabinForm() {
         <Textarea
           id='description'
           defaultValue=''
-          disabled={isLoading}
+          disabled={isWorking}
           {...register('description', {
             required: 'description required',
             minLength: {
               value: 10,
               message: 'Minimum length should be at least 10.',
             },
-            maxLength: { value: 300, message: 'Value should not exceed 80.' },
+            maxLength: { value: 500, message: 'Value should not exceed 500.' },
           })}
         />
       </FormRow>
@@ -122,9 +150,11 @@ function CreateCabinForm() {
       <FormRow label='Cabin photo' error={errors?.image?.message}>
         <FileInput
           id='image'
-          disabled={isLoading}
+          disabled={isWorking}
           accept='image/*'
-          {...register('image', { required: 'image required' })}
+          {...register('image', {
+            required: isEditSession ? false : 'image required',
+          })}
         />
       </FormRow>
 
@@ -133,7 +163,9 @@ function CreateCabinForm() {
           <Button variation='secondary' type='reset'>
             Cancel
           </Button>
-          <Button disabled={isLoading}>Edit cabin</Button>
+          <Button disabled={isWorking}>
+            {isEditSession ? 'Edit cabin' : 'create Cabin'}
+          </Button>
         </>
       </FormRow>
     </Form>

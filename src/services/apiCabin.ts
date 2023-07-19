@@ -1,19 +1,17 @@
 import { PostgrestSingleResponse, SupabaseClient } from '@supabase/supabase-js';
 import { NewCabin } from '../features/cabins/CreateCabinForm.tsx';
+import { Cabins } from '../../types/supabase.ts';
 
-export interface Cabin {
-  id: number;
-  created_at: string;
-  name: string;
-  maxCapacity: number;
-  regularPrice: number;
-  discount: number;
+interface Cabin {
   description: string;
-  image: string;
+  discount: string;
+  image: File | string;
+  maxCapacity: string;
+  name: string;
+  regularPrice: string;
 }
-
-export async function cabinAPIGet(supabase: SupabaseClient): Promise<Cabin[]> {
-  const { data, error }: PostgrestSingleResponse<Cabin[]> = await supabase
+export async function cabinAPIGet(supabase: SupabaseClient): Promise<Cabins[]> {
+  const { data, error }: PostgrestSingleResponse<Cabins[]> = await supabase
     .from('cabins')
     .select('*');
 
@@ -24,39 +22,70 @@ export async function cabinAPIGet(supabase: SupabaseClient): Promise<Cabin[]> {
   return data;
 }
 
-export async function cabinAPICreate(
+export async function cabinAPICreateAndEdit(
   supabase: SupabaseClient,
   cabin: NewCabin,
+  id?: number,
 ) {
-  const imageName = `${Math.random()}-${cabin.image.name.replaceAll('/', '-')}`;
+  const hasImagePath = typeof cabin.image === 'string';
+  const newCabin: Cabin = {
+    ...cabin,
+    image: typeof cabin.image === 'string' ? cabin.image : cabin.image[0],
+  };
   const path = import.meta.env.VITE_SUPABASE_URL as string;
-  const imagePath = `${path}/storage/v1/object/public/cabins-images/${imageName}`;
-
+  let imageName;
+  let imagePath;
+  if (!hasImagePath) {
+    imageName = `${Math.random()}-${(newCabin.image as File).name.replaceAll(
+      '/',
+      '-',
+    )}`;
+    imagePath = hasImagePath
+      ? newCabin.image
+      : `${path}/storage/v1/object/public/cabins-images/${imageName}`;
+  }
+  let datas;
   // inserting data
-  const { data, error }: PostgrestSingleResponse<Cabin[]> = await supabase
-    .from('cabins')
-    .insert({ ...cabin, image: imagePath })
-    .select();
-  console.log(data, 'data');
-  if (error) {
-    throw new Error('cabin could not be created');
+  if (!id) {
+    const { data, error }: PostgrestSingleResponse<Cabins[]> = await supabase
+      .from('cabins')
+      .insert({ ...newCabin, image: imagePath })
+      .select();
+
+    if (error) {
+      throw new Error('cabin could not be created');
+    }
+    datas = data;
+  }
+  if (id) {
+    const { error } = await supabase
+      .from('cabins')
+      .update({ ...newCabin, image: imagePath })
+      .eq('id', id);
+    if (error) throw new Error('cabin successfully updated');
   }
 
   // uploading image
-  const { error: imageError } = await supabase.storage
-    .from('cabins-images')
-    .upload(imageName, cabin.image);
-  if (imageError) {
-    await supabase.from('cabins').delete().eq('id', data[0].id);
-    throw new Error('error when uploading image or file is too large');
+  if (imageName) {
+    const { error: imageError } = await supabase.storage
+      .from('cabins-images')
+      .upload(imageName, newCabin.image);
+    if (imageError) {
+      if (datas) {
+        await supabase
+          .from('cabins')
+          .delete()
+          .eq('id', datas[0]?.id);
+      }
+      throw new Error('error when uploading image or file is too large');
+    }
   }
-  return data;
 }
 
 export async function cabinAPIDelete(
   supabase: SupabaseClient,
   id: number,
-): Promise<Cabin[] | null> {
+): Promise<Cabins[] | null> {
   const { data, error } = await supabase.from('cabins').delete().eq('id', id);
   if (error) {
     throw new Error('cabin cannot be deleted');

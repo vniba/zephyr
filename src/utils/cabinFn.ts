@@ -1,5 +1,5 @@
 import {
-  cabinAPICreate,
+  cabinAPICreateAndEdit,
   cabinAPIDelete,
   cabinAPIGet,
 } from '../services/apiCabin.ts';
@@ -13,6 +13,6 @@ export async function deleteCabins(id: number) {
   return cabinAPIDelete(supabase, id);
 }
 
-export async function createCabin(cabin: NewCabin) {
-  return cabinAPICreate(supabase, cabin);
+export async function createCabin(cabin: NewCabin, id?: number) {
+  return cabinAPICreateAndEdit(supabase, cabin, id);
 }
