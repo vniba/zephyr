@@ -2,7 +2,7 @@ import { PostgrestSingleResponse, SupabaseClient } from '@supabase/supabase-js';
 import { NewCabin } from '../features/cabins/CreateCabinForm.tsx';
 import { Cabins } from '../../types/supabase.ts';
 
-interface Cabin {
+export interface Cabin {
   description: string;
   discount: string;
   image: File | string;
@@ -32,6 +32,7 @@ export async function cabinAPICreateAndEdit(
     ...cabin,
     image: typeof cabin.image === 'string' ? cabin.image : cabin.image[0],
   };
+  console.log(newCabin);
   const path = import.meta.env.VITE_SUPABASE_URL as string;
   let imageName;
   let imagePath;
@@ -53,6 +54,7 @@ export async function cabinAPICreateAndEdit(
       .select();
 
     if (error) {
+      console.error(error, 'creating cabin');
       throw new Error('cabin could not be created');
     }
     datas = data;
@@ -62,7 +64,7 @@ export async function cabinAPICreateAndEdit(
       .from('cabins')
       .update({ ...newCabin, image: imagePath })
       .eq('id', id);
-    if (error) throw new Error('cabin successfully updated');
+    if (error) throw new Error('cabin cannot be updated');
   }
 
   // uploading image

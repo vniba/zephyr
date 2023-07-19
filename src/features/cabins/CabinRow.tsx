@@ -1,14 +1,11 @@
 import styled from 'styled-components';
-import { Cabin } from '../../services/apiCabin.ts';
 import { formatCurrency } from '../../utils/helpers.ts';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteCabins } from '../../utils/cabinFn.ts';
-import { CABIN_Q_KEY } from '../../utils/constants.ts';
-import toast from 'react-hot-toast';
 import Button from '../../ui/Button.tsx';
 import Row from '../../ui/Row.tsx';
 import { useState } from 'react';
 import CreateCabinForm from './CreateCabinForm.tsx';
+import { useDeleteCabin } from './useDeleteCabin.ts';
+import { Cabins } from '../../../types/supabase.ts';
 
 const TableRow = styled.div`
   display: grid;
@@ -51,34 +48,30 @@ const Discount = styled.div`
 `;
 
 interface CabinRowProps {
-  cabin: Cabin;
+  cabin: Cabins;
 }
 
 function CabinRow({ cabin }: CabinRowProps) {
   const { image, regularPrice, discount, name, maxCapacity, id } = cabin;
-  const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
-  const { isLoading: isDeleting, mutate } = useMutation({
-    mutationFn: deleteCabins,
-    onSuccess: async () => {
-      toast.success('successfully deleted');
-      await queryClient.invalidateQueries({ queryKey: [CABIN_Q_KEY] });
-    },
-    onError: error => toast.error((error as Error).message),
-  });
+  const { deleteCabin, isDeleting } = useDeleteCabin();
   return (
     <>
       <TableRow>
         <Img src={image} alt={name} />
         <Cabin>{name}</Cabin>
         <div>{maxCapacity}</div>
-        <Price>{formatCurrency(regularPrice)}</Price>
-        <Discount>{formatCurrency(discount)}</Discount>
+        <Price>{formatCurrency(+regularPrice)}</Price>
+        {discount ? (
+          <Discount>{formatCurrency(+discount)}</Discount>
+        ) : (
+          <span>&mdash;</span>
+        )}
         <Row type='horizontal'>
           <Button
             size='small'
             variation='danger'
-            onClick={() => mutate(id)}
+            onClick={() => deleteCabin(id)}
             disabled={isDeleting}>
             delete
           </Button>

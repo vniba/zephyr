@@ -80,14 +80,14 @@ interface Database {
       };
       cabins: {
         Row: {
-          created_at: string | null;
-          description: string | null;
-          discount: number | null;
+          created_at: string;
+          description: string;
+          discount: number;
           id: number;
-          image: string | null;
-          maxCapacity: number | null;
-          name: string | null;
-          regularPrice: number | null;
+          image: string;
+          maxCapacity: number;
+          name: string;
+          regularPrice: number;
         };
         Insert: {
           created_at?: string | null;

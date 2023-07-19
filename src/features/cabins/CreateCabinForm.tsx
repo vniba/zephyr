@@ -1,16 +1,14 @@
-import toast from 'react-hot-toast';
 import Input from '../../ui/Input';
 import Form from '../../ui/Form.tsx';
 import Button from '../../ui/Button.tsx';
 import FileInput from '../../ui/FileInput.tsx';
 import Textarea from '../../ui/Textarea.tsx';
 import { useForm } from 'react-hook-form';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createCabin } from '../../utils/cabinFn.ts';
-import { CABIN_Q_KEY } from '../../utils/constants.ts';
 import FormRow from '../../ui/FormRow.tsx';
 import { Cabin } from '../../services/apiCabin.ts';
 import { Cabins } from '../../../types/supabase.ts';
+import { useCreateCabins } from './useCreateCabin.ts';
+import { useEditCabin } from './useEditCabin.ts';
 
 export interface NewCabin {
   name: string;
@@ -22,10 +20,9 @@ export interface NewCabin {
 }
 
 interface CreateCabinFormProps {
-  cabinToEdit: Cabins;
+  cabinToEdit?: Cabins;
 }
 const defaultCabin: Cabin = {
-  id: 0,
   discount: '',
   regularPrice: '',
   maxCapacity: '',
@@ -36,8 +33,6 @@ const defaultCabin: Cabin = {
 function CreateCabinForm({ cabinToEdit = defaultCabin }: CreateCabinFormProps) {
   const { id: editId, ...editValues } = cabinToEdit;
   const isEditSession = !!editId;
-  console.log(editValues);
-  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
@@ -46,30 +41,13 @@ function CreateCabinForm({ cabinToEdit = defaultCabin }: CreateCabinFormProps) {
   } = useForm<NewCabin>({
     defaultValues: isEditSession ? editValues : defaultCabin,
   });
-  const { isLoading, mutate: createCabins } = useMutation({
-    mutationFn: createCabin,
-    onSuccess: async () => {
-      toast.success('cabin successfully created');
-      await queryClient.invalidateQueries({ queryKey: [CABIN_Q_KEY] });
-    },
-    onError: error => toast.error((error as Error).message),
-  });
+  const { isCreating, createCabins } = useCreateCabins();
 
-  const { isLoading: isEditing, mutate: updateCabin } = useMutation({
-    mutationFn: ({ cabin, id }: { cabin: NewCabin; id: number }) =>
-      createCabin(cabin, id),
-    onSuccess: async () => {
-      toast.success('cabin successfully created');
-      await queryClient.invalidateQueries({ queryKey: [CABIN_Q_KEY] });
-      reset();
-    },
-    onError: error => toast.error((error as Error).message),
-  });
-  const isWorking = isEditing || isLoading;
+  const { isEditing, updateCabin } = useEditCabin();
+  const isWorking = isEditing || isCreating;
   const handleAdd = (data: NewCabin) => {
     if (isEditSession) updateCabin({ cabin: { ...data }, id: editId });
-    else createCabins({ ...data });
-    console.log(data, 'handle add');
+    else createCabins({ ...data }, { onSuccess: () => reset() });
   };
 
   return (
@@ -123,7 +101,7 @@ function CreateCabinForm({ cabinToEdit = defaultCabin }: CreateCabinFormProps) {
           {...register('discount', {
             required: 'discount required',
             validate: (value, formValues) =>
-              value < formValues.regularPrice ||
+              +value < +formValues.regularPrice ||
               'discount should be less than the regular price.',
           })}
         />
