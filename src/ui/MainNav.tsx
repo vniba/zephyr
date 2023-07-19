@@ -12,8 +12,6 @@ const StyledNavLink = styled(NavLink)`
   &:link,
   &:visited {
     display: flex;
-    align-items: center;
-    gap: 1.2rem;
 
     color: var(--color-grey-600);
     font-size: 1.6rem;
@@ -46,6 +44,17 @@ const StyledNavLink = styled(NavLink)`
     color: var(--color-brand-900);
   }
 `;
+const StyledItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+
+  & span {
+    @media (max-width: 800px) {
+      display: none;
+    }
+  }
+`;
 
 function MainNav() {
   return (
@@ -53,9 +62,11 @@ function MainNav() {
       <NavList>
         {navItems.map(item => (
           <li key={item.label}>
-            <StyledNavLink to={item.to}>
-              {item.icon}
-              <span>{item.label}</span>
+            <StyledNavLink to={item.to} title={item.label}>
+              <StyledItem>
+                {item.icon}
+                <span>{item.label}</span>
+              </StyledItem>
             </StyledNavLink>
           </li>
         ))}

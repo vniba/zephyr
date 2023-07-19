@@ -5,14 +5,17 @@ import styled from 'styled-components';
 
 const StyledAppLayout = styled.div`
   display: grid;
-  grid-template-columns: 10rem 1fr;
+  grid-template-columns: 28rem 1fr;
   grid-template-rows: auto 1fr;
   height: 100vh;
+  @media (max-width: 800px) {
+    grid-template-columns: 8rem 1fr;
+  }
 `;
 
 const Main = styled.main`
   background-color: var(--color-grey-0);
-  padding: 4rem 5rem 7rem;
+  padding: 4rem 5rem 7rem 3rem;
   overflow: scroll;
 `;
 
