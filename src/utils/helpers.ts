@@ -24,9 +24,11 @@ export const getToday = function (options = {}) {
   return today.toISOString();
 };
 
-const getLocale = window.navigator.language;
-
 export const formatCurrency = (value: number) =>
   new Intl.NumberFormat('en', { style: 'currency', currency: 'USD' }).format(
     value,
   );
+
+export const createImageName = (name: string) => {
+  return `${Math.random()}-${name.replaceAll('/', '-')}`;
+};

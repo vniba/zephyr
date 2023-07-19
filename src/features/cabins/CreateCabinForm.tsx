@@ -23,9 +23,9 @@ interface CreateCabinFormProps {
   cabinToEdit?: Cabins;
 }
 const defaultCabin: Cabin = {
-  discount: '',
-  regularPrice: '',
-  maxCapacity: '',
+  discount: 0,
+  regularPrice: 0,
+  maxCapacity: 0,
   name: '',
   image: '',
   description: '',
@@ -43,11 +43,28 @@ function CreateCabinForm({ cabinToEdit = defaultCabin }: CreateCabinFormProps) {
   });
   const { isCreating, createCabins } = useCreateCabins();
 
-  const { isEditing, updateCabin } = useEditCabin();
+  const { isEditing, updateCabins } = useEditCabin();
   const isWorking = isEditing || isCreating;
   const handleAdd = (data: NewCabin) => {
-    if (isEditSession) updateCabin({ cabin: { ...data }, id: editId });
-    else createCabins({ ...data }, { onSuccess: () => reset() });
+    if (isEditSession)
+      updateCabins(
+        {
+          cabin: {
+            ...data,
+            image: typeof data.image === 'string' ? data.image : data.image[0],
+          },
+          id: editId,
+        },
+        { onSuccess: () => reset() },
+      );
+    else
+      createCabins(
+        {
+          ...data,
+          image: typeof data.image !== 'string' ? data.image[0] : data.image,
+        },
+        { onSuccess: () => reset() },
+      );
   };
 
   return (
