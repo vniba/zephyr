@@ -12,9 +12,9 @@ import { useEditCabin } from './useEditCabin.ts';
 
 export interface NewCabin {
   name: string;
-  maxCapacity: string;
-  regularPrice: string;
-  discount: string;
+  maxCapacity: number;
+  regularPrice: number;
+  discount: number;
   description: string;
   image: FileList | string;
 }

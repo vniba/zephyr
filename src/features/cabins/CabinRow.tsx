@@ -6,6 +6,8 @@ import { useState } from 'react';
 import CreateCabinForm from './CreateCabinForm.tsx';
 import { useDeleteCabin } from './useDeleteCabin.ts';
 import { Cabins } from '../../../types/supabase.ts';
+import { MdDelete, MdEdit, MdFileCopy } from 'react-icons/md';
+import { useCreateCabins } from './useCreateCabin.ts';
 
 const TableRow = styled.div`
   display: grid;
@@ -21,6 +23,7 @@ const TableRow = styled.div`
 
 const Img = styled.img`
   display: block;
+  font-size: 0.5rem;
   width: clamp(10rem, 13rem, 15rem);
   aspect-ratio: 3 / 2;
   object-fit: cover;
@@ -52,9 +55,21 @@ interface CabinRowProps {
 }
 
 function CabinRow({ cabin }: CabinRowProps) {
-  const { image, regularPrice, discount, name, maxCapacity, id } = cabin;
+  const { image, regularPrice, discount, name, maxCapacity, id, description } =
+    cabin;
   const [showForm, setShowForm] = useState(false);
   const { deleteCabin, isDeleting } = useDeleteCabin();
+  const { createCabins, isCreating } = useCreateCabins();
+  function handleDuplicate() {
+    createCabins({
+      name: `C-${name || ''}`,
+      maxCapacity,
+      discount,
+      regularPrice,
+      description,
+      image,
+    });
+  }
   return (
     <>
       <TableRow>
@@ -69,17 +84,24 @@ function CabinRow({ cabin }: CabinRowProps) {
         )}
         <Row type='horizontal'>
           <Button
+            disabled={isCreating}
+            onClick={handleDuplicate}
+            variation='secondary'
+            size='small'>
+            <MdFileCopy />
+          </Button>
+          <Button
             size='small'
             variation='danger'
             onClick={() => deleteCabin(id)}
             disabled={isDeleting}>
-            delete
+            <MdDelete />
           </Button>
           <Button
             onClick={() => setShowForm(prevState => !prevState)}
             variation='secondary'
             size='small'>
-            Edit
+            <MdEdit />
           </Button>
         </Row>
       </TableRow>

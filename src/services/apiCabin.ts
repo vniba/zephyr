@@ -4,11 +4,11 @@ import { Cabins } from '../../types/supabase.ts';
 
 export interface Cabin {
   description: string;
-  discount: string;
+  discount: number;
   image: File | string;
-  maxCapacity: string;
+  maxCapacity: number;
   name: string;
-  regularPrice: string;
+  regularPrice: number;
 }
 export async function cabinAPIGet(supabase: SupabaseClient): Promise<Cabins[]> {
   const { data, error }: PostgrestSingleResponse<Cabins[]> = await supabase
@@ -50,9 +50,8 @@ export async function cabinAPICreateAndEdit(
   if (!id) {
     const { data, error }: PostgrestSingleResponse<Cabins[]> = await supabase
       .from('cabins')
-      .insert({ ...newCabin, image: imagePath })
+      .insert({ ...newCabin, image: imagePath ? imagePath : newCabin.image })
       .select();
-
     if (error) {
       console.error(error, 'creating cabin');
       throw new Error('cabin could not be created');
@@ -68,6 +67,7 @@ export async function cabinAPICreateAndEdit(
   }
 
   // uploading image
+  if (hasImagePath) return datas;
   if (imageName) {
     const { error: imageError } = await supabase.storage
       .from('cabins-images')
