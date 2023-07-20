@@ -4,13 +4,19 @@ exports[`logo component > should  match default Logo snapshot  1`] = `
 {
   "asFragment": [Function],
   "baseElement": .c0 {
-  text-align: center;
+  margin: 0 auto;
 }
 
 .c1 {
   height: 9.6rem;
   width: auto;
   border-radius: 50%;
+}
+
+@media (max-width: 800px) {
+  .c1 {
+    height: 4rem;
+  }
 }
 
 <body>
@@ -27,13 +33,19 @@ exports[`logo component > should  match default Logo snapshot  1`] = `
     </div>
   </body>,
   "container": .c0 {
-  text-align: center;
+  margin: 0 auto;
 }
 
 .c1 {
   height: 9.6rem;
   width: auto;
   border-radius: 50%;
+}
+
+@media (max-width: 800px) {
+  .c1 {
+    height: 4rem;
+  }
 }
 
 <div>

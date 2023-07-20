@@ -143,12 +143,12 @@ interface Database {
       };
       settings: {
         Row: {
-          breakfastPrice: number | null;
-          created_at: string | null;
+          breakfastPrice: number;
+          created_at: string;
           id: number;
-          maxBookingLenght: number | null;
-          maxGuestsPerBooking: number | null;
-          minBookingLength: number | null;
+          maxBookingLength: number;
+          maxGuestsPerBooking: number;
+          minBookingLength: number;
         };
         Insert: {
           breakfastPrice?: number | null;
@@ -184,3 +184,4 @@ interface Database {
   };
 }
 export type Cabins = Database['public']['Tables']['cabins']['Row'];
+export type Settings = Database['public']['Tables']['settings']['Row'];

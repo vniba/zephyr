@@ -11,7 +11,7 @@ export interface Cabin {
   name: string;
   regularPrice: number;
 }
-interface INewCabin {
+export interface INewCabin {
   name: string;
   maxCapacity: number;
   regularPrice: number;
