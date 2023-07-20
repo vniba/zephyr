@@ -4,7 +4,10 @@ import { render } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 export function TestRouter(component: ReactNode) {
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false } },
+  });
+  queryClient.clear();
   return render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>{component}</BrowserRouter>

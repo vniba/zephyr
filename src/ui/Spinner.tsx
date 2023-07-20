@@ -20,7 +20,7 @@ const StyledSpinner = styled.div`
 `;
 
 function Spinner() {
-  return <StyledSpinner />;
+  return <StyledSpinner id='spinner' />;
 }
 
 export default Spinner;
