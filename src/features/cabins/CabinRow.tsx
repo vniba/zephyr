@@ -7,7 +7,7 @@ import CreateCabinForm from './CreateCabinForm.tsx';
 import { useDeleteCabin } from './useDeleteCabin.ts';
 import { Cabins } from '../../../types/supabase.ts';
 import { MdDelete, MdEdit, MdFileCopy } from 'react-icons/md';
-import { useCreateCabins } from './useCreateCabin.ts';
+import { useCreateCabin } from './useCreateCabin.ts';
 
 const TableRow = styled.div`
   display: grid;
@@ -59,7 +59,7 @@ function CabinRow({ cabin }: CabinRowProps) {
     cabin;
   const [showForm, setShowForm] = useState(false);
   const { deleteCabin, isDeleting } = useDeleteCabin();
-  const { createCabins, isCreating } = useCreateCabins();
+  const { createCabins, isCreating } = useCreateCabin();
   function handleDuplicate() {
     createCabins({
       name: `C-${name || ''}`,

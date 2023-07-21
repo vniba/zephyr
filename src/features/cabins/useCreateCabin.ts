@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import { CABIN_Q_KEY } from '../../utils/constants.ts';
 import { createCabin } from '../../utils/cabinFn.ts';
 
-export function useCreateCabins() {
+export function useCreateCabin() {
   const queryClient = useQueryClient();
   const { isLoading: isCreating, mutate: createCabins } = useMutation({
     mutationFn: createCabin,
