@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 
 interface FormProps {
-  type: 'modal';
+  type: 'modal' | 'regular';
 }
 
 const Form = styled.form<FormProps>`
@@ -28,5 +28,7 @@ const Form = styled.form<FormProps>`
   overflow: hidden;
   font-size: 1.4rem;
 `;
-
+Form.defaultProps = {
+  type: 'modal',
+};
 export default Form;

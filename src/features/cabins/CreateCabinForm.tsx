@@ -21,6 +21,7 @@ export interface NewCabin {
 
 interface CreateCabinFormProps {
   cabinToEdit?: Cabins;
+  onCloseModal?: () => void;
 }
 const defaultCabin: Cabin = {
   discount: 0,
@@ -30,9 +31,14 @@ const defaultCabin: Cabin = {
   image: '',
   description: '',
 };
-function CreateCabinForm({ cabinToEdit = defaultCabin }: CreateCabinFormProps) {
+function CreateCabinForm({
+  cabinToEdit = defaultCabin,
+  onCloseModal,
+}: CreateCabinFormProps) {
   const { id: editId, ...editValues } = cabinToEdit;
+
   const isEditSession = !!editId;
+  console.log(isEditSession);
   const {
     register,
     handleSubmit,
@@ -63,12 +69,19 @@ function CreateCabinForm({ cabinToEdit = defaultCabin }: CreateCabinFormProps) {
           ...data,
           image: typeof data.image !== 'string' ? data.image[0] : data.image,
         },
-        { onSuccess: () => reset() },
+        {
+          onSuccess: () => {
+            reset();
+            onCloseModal?.();
+          },
+        },
       );
   };
 
   return (
-    <Form type='modal' onSubmit={handleSubmit(handleAdd)}>
+    <Form
+      type={onCloseModal ? 'modal' : 'regular'}
+      onSubmit={handleSubmit(handleAdd)}>
       <FormRow label='Cabin Name' error={errors?.name?.message}>
         <Input
           disabled={isWorking}
@@ -155,7 +168,10 @@ function CreateCabinForm({ cabinToEdit = defaultCabin }: CreateCabinFormProps) {
 
       <FormRow>
         <>
-          <Button variation='secondary' type='reset'>
+          <Button
+            onClick={() => onCloseModal?.()}
+            variation='secondary'
+            type='reset'>
             Cancel
           </Button>
           <Button disabled={isWorking}>

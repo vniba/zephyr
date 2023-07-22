@@ -1,23 +1,26 @@
 import Button from '../../ui/Button.tsx';
-import { useState } from 'react';
-import Row from '../../ui/Row.tsx';
+
 import Modal from '../../ui/Modal.tsx';
 import CreateCabinForm from './CreateCabinForm.tsx';
+import CabinTable from './CabinTable.tsx';
 
 function AddCabin() {
-  const [isOPenModal, setIsOpenModal] = useState(false);
-
   return (
-    <Row>
-      <Button onClick={() => setIsOpenModal(prevState => !prevState)}>
-        Add new Cabin
-      </Button>
-      {isOPenModal && (
-        <Modal onClose={() => setIsOpenModal(false)}>
-          <CreateCabinForm />
-        </Modal>
-      )}
-    </Row>
+    <Modal>
+      <Modal.Open opensWindowName='cabin-form'>
+        <Button>Add New Cabin</Button>
+      </Modal.Open>
+      <Modal.Window name='cabin-form'>
+        <CreateCabinForm />
+      </Modal.Window>
+
+      <Modal.Open opensWindowName='table'>
+        <Button>Show Table</Button>
+      </Modal.Open>
+      <Modal.Window name='table'>
+        <CabinTable />
+      </Modal.Window>
+    </Modal>
   );
 }
 

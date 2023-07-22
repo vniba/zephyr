@@ -11,6 +11,8 @@ const StyledFormRow = styled.div`
 
   @media (max-width: 780px) {
     grid-template-columns: 1fr;
+    gap: 0.5rem;
+    font-size: 1rem;
   }
 
   &:first-child {

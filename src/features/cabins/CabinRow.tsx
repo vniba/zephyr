@@ -70,6 +70,7 @@ function CabinRow({ cabin }: CabinRowProps) {
       image,
     });
   }
+
   return (
     <>
       <TableRow>

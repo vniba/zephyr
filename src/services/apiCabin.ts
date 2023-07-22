@@ -52,6 +52,7 @@ export async function cabinAPICreate(
   cabin: INewCabin,
 ) {
   const path = import.meta.env.VITE_SUPABASE_URL as string;
+
   const imageName = createImageName(cabin.image.name);
   const imagePath = getImagePath(cabin, path, imageName);
 
