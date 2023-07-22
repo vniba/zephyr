@@ -11,14 +11,7 @@ export interface Cabin {
   name: string;
   regularPrice: number;
 }
-export interface INewCabin {
-  name: string;
-  maxCapacity: number;
-  regularPrice: number;
-  discount: number;
-  description: string;
-  image: File;
-}
+
 export async function cabinAPIGet(supabase: SupabaseClient): Promise<Cabins[]> {
   const { data, error }: PostgrestSingleResponse<Cabins[]> = await supabase
     .from('cabins')
@@ -47,28 +40,35 @@ async function uploadImage(newCabin: Cabin, imageName: string, id: number) {
   return error;
 }
 
-export async function cabinAPICreate(
-  supabase: SupabaseClient,
-  cabin: INewCabin,
-) {
+export async function cabinAPICreate(supabase: SupabaseClient, cabin: Cabin) {
   const path = import.meta.env.VITE_SUPABASE_URL as string;
 
-  const imageName = createImageName(cabin.image.name);
-  const imagePath = getImagePath(cabin, path, imageName);
+  let newCabin;
+  let imagePath;
+  let imageName;
+  if (typeof cabin.image !== 'string') {
+    imageName = createImageName(cabin.image.name);
+    imagePath = getImagePath(cabin, path, imageName);
+    newCabin = {
+      ...cabin,
+      image: imagePath,
+    };
+  }
 
-  const newCabin: Cabin = {
-    ...cabin,
-    image: imagePath,
-  };
+  if (typeof cabin.image === 'string') {
+    newCabin = {
+      ...cabin,
+    };
+  }
 
   const { data, error }: PostgrestSingleResponse<Cabins[]> = await supabase
     .from('cabins')
-    .insert({ ...newCabin, image: imagePath })
+    .insert({ ...newCabin })
     .select();
   if (error) {
     throw new Error('cabin could not be created');
   }
-  await uploadImage(newCabin, imageName, data[0].id);
+  if (newCabin && imageName) await uploadImage(newCabin, imageName, data[0].id);
   return data;
 }
 
@@ -79,16 +79,20 @@ export async function cabinAPIUpdate(
 ) {
   const path = import.meta.env.VITE_SUPABASE_URL as string;
   const isImageName = typeof updatedCabin.image === 'string';
-  const imageName = createImageName((updatedCabin.image as File).name);
+  let imageName;
   let imagePath;
-  if (!isImageName) imagePath = getImagePath(updatedCabin, path, imageName);
+  if (!isImageName) {
+    imageName = createImageName((updatedCabin.image as File).name);
+    imagePath = getImagePath(updatedCabin, path, imageName);
+  }
+
   const { data, error } = await supabase
     .from('cabins')
     .update({ ...updatedCabin, image: imagePath })
     .eq('id', id);
   if (error) throw new Error('cabin cannot be updated');
   if (!isImageName) {
-    await uploadImage(updatedCabin, imageName, id);
+    if (imageName) await uploadImage(updatedCabin, imageName, id);
   }
   return data;
 }

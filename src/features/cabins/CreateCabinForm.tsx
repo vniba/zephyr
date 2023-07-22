@@ -5,10 +5,9 @@ import FileInput from '../../ui/FileInput.tsx';
 import Textarea from '../../ui/Textarea.tsx';
 import { useForm } from 'react-hook-form';
 import FormRow from '../../ui/FormRow.tsx';
-import { Cabin } from '../../services/apiCabin.ts';
-import { Cabins } from '../../../types/supabase.ts';
 import { useCreateCabin } from './useCreateCabin.ts';
 import { useEditCabin } from './useEditCabin.ts';
+import { Cabins } from '../../../types/supabase.ts';
 
 export interface NewCabin {
   name: string;
@@ -23,13 +22,15 @@ interface CreateCabinFormProps {
   cabinToEdit?: Cabins;
   onCloseModal?: () => void;
 }
-const defaultCabin: Cabin = {
+const defaultCabin: Cabins = {
   discount: 0,
   regularPrice: 0,
   maxCapacity: 0,
   name: '',
   image: '',
   description: '',
+  created_at: '',
+  id: 0,
 };
 function CreateCabinForm({
   cabinToEdit = defaultCabin,
@@ -38,7 +39,6 @@ function CreateCabinForm({
   const { id: editId, ...editValues } = cabinToEdit;
 
   const isEditSession = !!editId;
-  console.log(isEditSession);
   const {
     register,
     handleSubmit,
