@@ -19,6 +19,10 @@ const Form = styled.form<FormProps>`
     type === 'modal' &&
     css`
       width: 80rem;
+
+      @media (max-width: 780px) {
+        width: 50rem;
+      }
     `}
     
   overflow: hidden;

@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import FormRow from '../../ui/FormRow.tsx';
 import { Cabin } from '../../services/apiCabin.ts';
 import { Cabins } from '../../../types/supabase.ts';
-import { useCreateCabins } from './useCreateCabin.ts';
+import { useCreateCabin } from './useCreateCabin.ts';
 import { useEditCabin } from './useEditCabin.ts';
 
 export interface NewCabin {
@@ -41,7 +41,7 @@ function CreateCabinForm({ cabinToEdit = defaultCabin }: CreateCabinFormProps) {
   } = useForm<NewCabin>({
     defaultValues: isEditSession ? editValues : defaultCabin,
   });
-  const { isCreating, createCabins } = useCreateCabins();
+  const { isCreating, createCabins } = useCreateCabin();
 
   const { isEditing, updateCabins } = useEditCabin();
   const isWorking = isEditing || isCreating;

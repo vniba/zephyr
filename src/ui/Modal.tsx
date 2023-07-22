@@ -1,4 +1,6 @@
-import styled from "styled-components";
+import styled from 'styled-components';
+import { ReactNode } from 'react';
+import { HiXMark } from 'react-icons/hi2';
 
 const StyledModal = styled.div`
   position: fixed;
@@ -48,3 +50,24 @@ const Button = styled.button`
     color: var(--color-grey-500);
   }
 `;
+
+function Modal({
+  children,
+  onClose,
+}: {
+  children: ReactNode;
+  onClose: () => void;
+}) {
+  return (
+    <Overlay>
+      <StyledModal>
+        <Button onClick={onClose}>
+          <HiXMark />
+        </Button>
+        <div>{children}</div>
+      </StyledModal>
+    </Overlay>
+  );
+}
+
+export default Modal;
