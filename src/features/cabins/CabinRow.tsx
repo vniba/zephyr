@@ -2,12 +2,13 @@ import styled from 'styled-components';
 import { formatCurrency } from '../../utils/helpers.ts';
 import Button from '../../ui/Button.tsx';
 import Row from '../../ui/Row.tsx';
-import { useState } from 'react';
 import CreateCabinForm from './CreateCabinForm.tsx';
 import { useDeleteCabin } from './useDeleteCabin.ts';
 import { Cabins } from '../../../types/supabase.ts';
 import { MdDelete, MdEdit, MdFileCopy } from 'react-icons/md';
 import { useCreateCabin } from './useCreateCabin.ts';
+import Modal from '../../ui/Modal.tsx';
+import ConfirmDelete from '../../ui/ConfirmDelete.tsx';
 
 const TableRow = styled.div`
   display: grid;
@@ -57,9 +58,9 @@ interface CabinRowProps {
 function CabinRow({ cabin }: CabinRowProps) {
   const { image, regularPrice, discount, name, maxCapacity, id, description } =
     cabin;
-  const [showForm, setShowForm] = useState(false);
   const { deleteCabin, isDeleting } = useDeleteCabin();
   const { createCabins, isCreating } = useCreateCabin();
+
   function handleDuplicate() {
     createCabins({
       name: `C-${name || ''}`,
@@ -91,22 +92,31 @@ function CabinRow({ cabin }: CabinRowProps) {
             size='small'>
             <MdFileCopy />
           </Button>
-          <Button
-            size='small'
-            variation='danger'
-            onClick={() => deleteCabin(id)}
-            disabled={isDeleting}>
-            <MdDelete />
-          </Button>
-          <Button
-            onClick={() => setShowForm(prevState => !prevState)}
-            variation='secondary'
-            size='small'>
-            <MdEdit />
-          </Button>
+          <Modal>
+            <Modal.Open opensWindowName='edit'>
+              <Button variation='secondary' size='small'>
+                <MdEdit />
+              </Button>
+            </Modal.Open>
+            <Modal.Window name='edit'>
+              <CreateCabinForm cabinToEdit={cabin} />
+            </Modal.Window>
+
+            <Modal.Open opensWindowName='delete'>
+              <Button size='small' variation='danger' disabled={isDeleting}>
+                <MdDelete />
+              </Button>
+            </Modal.Open>
+            <Modal.Window name='delete'>
+              <ConfirmDelete
+                resourceName={'cabins'}
+                onConfirm={() => deleteCabin(id)}
+                disabled={isDeleting}
+              />
+            </Modal.Window>
+          </Modal>
         </Row>
       </TableRow>
-      {showForm && <CreateCabinForm cabinToEdit={cabin} />}
     </>
   );
 }
