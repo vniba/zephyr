@@ -1,17 +1,22 @@
-import styled from "styled-components";
+import styled from 'styled-components';
+import { createContext, ReactNode, useContext } from 'react';
+import { Cabins } from '../../types/supabase.ts';
+import Empty from './Empty.tsx';
 
 const StyledTable = styled.div`
   border: 1px solid var(--color-grey-200);
-
   font-size: 1.4rem;
   background-color: var(--color-grey-0);
   border-radius: 7px;
   overflow: hidden;
 `;
+interface CommonRowProps {
+  columns: string;
+}
 
-const CommonRow = styled.div`
+const CommonRow = styled.div<CommonRowProps>`
   display: grid;
-  grid-template-columns: ${(props) => props.columns};
+  grid-template-columns: ${({ columns }) => columns};
   column-gap: 2.4rem;
   align-items: center;
   transition: none;
@@ -58,3 +63,51 @@ const Empty = styled.p`
   text-align: center;
   margin: 2.4rem;
 `;
+interface ITableContext {
+  columns: string;
+}
+const TableContext = createContext<ITableContext>({ columns: '' });
+interface TableProps {
+  columns: string;
+  children: ReactNode;
+}
+function Table({ columns, children }: TableProps) {
+  return (
+    <TableContext.Provider value={{ columns }}>
+      <StyledTable role='table'>{children}</StyledTable>
+    </TableContext.Provider>
+  );
+}
+interface Props {
+  children: ReactNode;
+}
+function Header({ children }: Props) {
+  const { columns } = useContext(TableContext);
+  return (
+    <StyledHeader role='row' columns={columns}>
+      {children}
+    </StyledHeader>
+  );
+}
+function Row({ children }: Props) {
+  const { columns } = useContext(TableContext);
+  return (
+    <StyledRow role='row' columns={columns}>
+      {children}
+    </StyledRow>
+  );
+}
+interface BodyProps {
+  render: (cabin: Cabins) => ReactNode;
+  data: Cabins[] | undefined;
+}
+function Body({ render, data }: BodyProps) {
+  if (!data?.length) return <Empty>No data found</Empty>;
+  return <StyledBody>{data?.map(render)}</StyledBody>;
+}
+
+Table.Header = Header;
+Table.Row = Row;
+Table.Body = Body;
+Table.Footer = Footer;
+export default Table;
