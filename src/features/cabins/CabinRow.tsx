@@ -1,14 +1,15 @@
 import styled from 'styled-components';
 import { formatCurrency } from '../../utils/helpers.ts';
-import Button from '../../ui/Button.tsx';
 import Row from '../../ui/Row.tsx';
 import CreateCabinForm from './CreateCabinForm.tsx';
 import { useDeleteCabin } from './useDeleteCabin.ts';
 import { Cabins } from '../../../types/supabase.ts';
-import { MdDelete, MdEdit, MdFileCopy } from 'react-icons/md';
+import { MdEdit } from 'react-icons/md';
 import { useCreateCabin } from './useCreateCabin.ts';
 import Modal from '../../ui/Modal.tsx';
 import ConfirmDelete from '../../ui/ConfirmDelete.tsx';
+import Menus from '../../ui/Menus.tsx';
+import { HiSquare2Stack, HiTrash } from 'react-icons/hi2';
 
 const TableRow = styled.div`
   display: grid;
@@ -59,7 +60,7 @@ function CabinRow({ cabin }: CabinRowProps) {
   const { image, regularPrice, discount, name, maxCapacity, id, description } =
     cabin;
   const { deleteCabin, isDeleting } = useDeleteCabin();
-  const { createCabins, isCreating } = useCreateCabin();
+  const { createCabins } = useCreateCabin();
 
   function handleDuplicate() {
     createCabins({
@@ -85,34 +86,33 @@ function CabinRow({ cabin }: CabinRowProps) {
           <span>&mdash;</span>
         )}
         <Row type='horizontal'>
-          <Button
-            disabled={isCreating}
-            onClick={handleDuplicate}
-            variation='secondary'
-            size='small'>
-            <MdFileCopy />
-          </Button>
           <Modal>
-            <Modal.Open opensWindowName='edit'>
-              <Button variation='secondary' size='small'>
-                <MdEdit />
-              </Button>
-            </Modal.Open>
-            <Modal.Window name='edit'>
-              <CreateCabinForm cabinToEdit={cabin} />
-            </Modal.Window>
+            <Menus.Menu>
+              <Menus.Toggle id={id} />
+              <Menus.List id={id}>
+                <Menus.Button
+                  icon={<HiSquare2Stack />}
+                  onClick={handleDuplicate}>
+                  copy
+                </Menus.Button>
+                <Modal.Open opensWindowName='edit'>
+                  <Menus.Button icon={<MdEdit />}>edit</Menus.Button>
+                </Modal.Open>
+                <Modal.Open opensWindowName='delete'>
+                  <Menus.Button icon={<HiTrash />}>delete</Menus.Button>
+                </Modal.Open>
+              </Menus.List>
+            </Menus.Menu>
 
-            <Modal.Open opensWindowName='delete'>
-              <Button size='small' variation='danger' disabled={isDeleting}>
-                <MdDelete />
-              </Button>
-            </Modal.Open>
             <Modal.Window name='delete'>
               <ConfirmDelete
-                resourceName={'cabins'}
-                onConfirm={() => deleteCabin(id)}
+                resourceName='cabins'
                 disabled={isDeleting}
+                onConfirm={() => deleteCabin(id)}
               />
+            </Modal.Window>
+            <Modal.Window name='edit'>
+              <CreateCabinForm cabinToEdit={cabin} />
             </Modal.Window>
           </Modal>
         </Row>

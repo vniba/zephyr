@@ -37,7 +37,6 @@ function CreateCabinForm({
   onCloseModal,
 }: CreateCabinFormProps) {
   const { id: editId, ...editValues } = cabinToEdit;
-
   const isEditSession = !!editId;
   const {
     register,

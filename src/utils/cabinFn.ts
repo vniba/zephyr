@@ -4,7 +4,6 @@ import {
   cabinAPIDelete,
   cabinAPIGet,
   cabinAPIUpdate,
-  INewCabin,
 } from '../services/apiCabin.ts';
 import supabase from '../services/supabase.ts';
 
@@ -15,7 +14,7 @@ export async function deleteCabins(id: number) {
   return cabinAPIDelete(supabase, id);
 }
 
-export async function createCabin(cabin: INewCabin) {
+export async function createCabin(cabin: Cabin) {
   return cabinAPICreate(supabase, cabin);
 }
 

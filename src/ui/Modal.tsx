@@ -1,9 +1,11 @@
 import styled from 'styled-components';
-import React, {
+import {
   cloneElement,
   createContext,
+  Dispatch,
   ReactElement,
   ReactNode,
+  SetStateAction,
   useContext,
   useState,
 } from 'react';
@@ -61,19 +63,19 @@ const Button = styled.button`
 `;
 
 interface IModalContext {
-  openName: string;
+  openName: null | string;
   close: () => void;
-  open: React.Dispatch<React.SetStateAction<string>>;
+  open: Dispatch<SetStateAction<string | null>>;
 }
 const ModalContext = createContext<IModalContext>({
-  close(): void {},
-  open(): void {},
-  openName: '',
+  close: () => {},
+  open: () => {},
+  openName: null,
 });
 
 function Modal({ children }: { children: ReactNode }) {
-  const [openName, setOpenName] = useState('');
-  const close = () => setOpenName('');
+  const [openName, setOpenName] = useState<null | string>(null);
+  const close = () => setOpenName(null);
   const open = setOpenName;
   return (
     <ModalContext.Provider value={{ openName, close, open }}>
@@ -95,9 +97,10 @@ function Open({
 
 function Window({ children, name }: { children: ReactElement; name: string }) {
   const { openName, close } = useContext(ModalContext);
-  const ref = useOutsideClick(close, true);
+  const ref = useOutsideClick<HTMLDivElement>(close, true);
 
-  if (name !== openName) return false;
+  if (name !== openName) return null;
+
   return createPortal(
     <Overlay>
       <StyledModal ref={ref}>
