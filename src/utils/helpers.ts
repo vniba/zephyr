@@ -1,5 +1,6 @@
 import { formatDistance, parseISO } from 'date-fns';
 import { differenceInDays } from 'date-fns/esm';
+import { Cabins } from '../../types/supabase.ts';
 
 // We want to make this function work for both Date objects and strings (which come from Supabase)
 export const subtractDates = (dateStr1: string, dateStr2: string) =>
@@ -32,3 +33,13 @@ export const formatCurrency = (value: number) =>
 export const createImageName = (name: string) => {
   return `${Math.random()}-${name.replaceAll('/', '-')}`;
 };
+
+export function filterCabinWithDiscount(cabin: Cabins[], discount: string) {
+  if (discount === 'no-discount') {
+    return cabin.filter(item => item.discount === 0);
+  }
+  if (discount === 'with-discount') {
+    return cabin.filter(item => item.discount > 0);
+  }
+  if (discount === 'all') return cabin;
+}

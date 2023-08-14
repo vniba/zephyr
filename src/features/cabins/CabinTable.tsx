@@ -4,9 +4,17 @@ import { useCabins } from './useCabins.ts';
 import Table from '../../ui/Table.tsx';
 import { Cabins } from '../../../types/supabase.ts';
 import Menus from '../../ui/Menus.tsx';
+import { useSearchParams } from 'react-router-dom';
+import { filterCabinWithDiscount } from '../../utils/helpers.ts';
 
 function CabinTable() {
   const { isLoading, cabins, error } = useCabins();
+  const [searchParams] = useSearchParams();
+  const filterValue: string = searchParams.get('discount') || 'all';
+  let filteredCabins;
+  if (cabins) {
+    filteredCabins = filterCabinWithDiscount(cabins, filterValue);
+  }
   if (isLoading) return <Spinner />;
   if (error) return false;
   return (
@@ -20,7 +28,7 @@ function CabinTable() {
           <div>discount</div>
         </Table.Header>
         <Table.Body
-          data={cabins}
+          data={filteredCabins}
           render={(cabin: Cabins) => <CabinRow key={cabin.id} cabin={cabin} />}
         />
       </Table>
